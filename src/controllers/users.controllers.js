@@ -31,6 +31,7 @@ export async function signup(req, res) {
 
     res.status(201).send({ message: "Usuário Cadastrado" });
   } catch (err) {
+    console.log('err de signup backend:', err)
     return res.status(500).send(err.message);
   }
 }
@@ -56,6 +57,7 @@ export async function signin(req, res) {
       res.status(401).send({ message: "Senha incorreta!" });
     }
   } catch (err) {
+    console.log('err de signin backend:', err)
     return res.status(500).send(err.message);
   }
 }
@@ -69,6 +71,7 @@ export async function logout(req, res) {
     res.status(204).send("Token removido!")
 
   } catch (err) {
-    res.status(500).send(err.message)
+    console.log('err de logout backend:', err)
+    return res.status(500).send(err.message);
   }
 }
