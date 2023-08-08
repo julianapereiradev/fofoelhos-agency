@@ -1,10 +1,10 @@
 import { db } from "../database/database.connection.js";
-import { postBunnyDB } from "../repositories/bunnies.repositories.js";
+import { getBunniesDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
 
 export async function getBunnies(req,res) {
     try {
-        // const data = await db.collection(collections.products).find().toArray()
-        // return res.send(data);
+        const data = await getBunniesDB(true)
+        return res.send(data.rows);
     } catch (err) {
         console.log('err de getBunnies backend:', err)
     return res.status(500).send(err.message);
