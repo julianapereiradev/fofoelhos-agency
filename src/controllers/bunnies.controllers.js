@@ -1,4 +1,5 @@
 import { db } from "../database/database.connection.js";
+import { postBunnyDB } from "../repositories/bunnies.repositories.js";
 
 export async function getBunnies(req,res) {
     try {
@@ -25,17 +26,36 @@ export async function getBunny(req, res) {
     }
 }
 
+
 export async function postBunny(req, res) {
-    // const newProduct = {
-    //     ...req.body, 
-    //     price: Number(req.body.price), 
-    //     year: Number(req.body.year),
-    //     quantityInStock: Number(req.body.quantityInStock)
-    // }
+const { name, description, age, breedId, skinColorId, sizeId, active, url } = req.body;
+const session = res.locals;
 
     try {
-        // await db.collection(collections.products).insertOne(newProduct)
-        // res.send('Produto adicionado ao banco de dados.')
+       await postBunnyDB(
+            name,
+            session.rows[0].userId,
+            age,
+            description,
+            breedId,
+            skinColorId,
+            sizeId,
+            active,
+            url
+        );
+    
+    res.status(201).send({
+        name: name,
+        userId: session.rows[0].userId,
+        age: age,
+        description: description,
+        breedId: breedId,
+        skinColorId: skinColorId,
+        sizeId: sizeId,
+        active: active,
+        url: url
+      });
+
     } catch (err) {
         console.log('err de postBunny backend:', err)
         return res.status(500).send(err.message);

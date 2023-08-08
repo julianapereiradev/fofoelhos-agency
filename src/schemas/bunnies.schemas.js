@@ -1,8 +1,12 @@
 import joi from "joi";
 
-//validation schema para post e update que será 1 só
-
 export const bunnySchema = joi.object({
-    name: joi.string().required()
-    //completar
+    name: joi.string().required(),
+    age: joi.string().required(),
+    description: joi.string().required(),
+    breedId: joi.number().required(),
+    skinColorId: joi.number().required(),
+    sizeId: joi.number().required(),
+    url: joi.string().uri().trim().required(),
+    active: joi.boolean().required()
 });
