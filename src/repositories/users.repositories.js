@@ -4,6 +4,10 @@ export async function findUserByEmailDB(email) {
   return db.query(`SELECT * FROM users WHERE email=$1`, [email]);
 }
 
+export async function findUserByCpfDB(cpf) {
+  return db.query(`SELECT * FROM users WHERE cpf=$1`, [cpf]);
+}
+
 
 export async function signupDB(name, email, cpf, phone, encryptedPassword) {
     return await db.query(

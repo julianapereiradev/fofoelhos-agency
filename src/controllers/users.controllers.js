@@ -1,7 +1,7 @@
 import { db } from "../database/database.connection.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { findUserByEmailDB, signinDB, signupDB } from "../repositories/users.repositories.js";
+import { findUserByCpfDB, findUserByEmailDB, signinDB, signupDB } from "../repositories/users.repositories.js";
 
 
 //Functions:
@@ -18,6 +18,11 @@ export async function signup(req, res) {
     const existingUser = await findUserByEmailDB(email);
     if (existingUser.rowCount > 0) {
       return res.status(409).send({ message: "Este email já existe no banco" });
+    }
+
+    const existingUserByCpf = await findUserByCpfDB(cpf);
+    if (existingUserByCpf.rowCount > 0) {
+      return res.status(409).send({ message: "Este CPF já existe no banco" });
     }
 
     const encryptedPassword = bcrypt.hashSync(password, 10);
