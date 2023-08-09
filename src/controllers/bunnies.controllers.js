@@ -1,5 +1,5 @@
 import { db } from "../database/database.connection.js";
-import { getBunniesDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
+import { getBunniesDB, getBunnyDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
 
 export async function getBunnies(req,res) {
     try {
@@ -12,14 +12,19 @@ export async function getBunnies(req,res) {
 }
 
 export async function getBunny(req, res) {
-    // const { id } = req.params
-    // if (!id) return res.status(400).send("O id do produto é obrigatório!")
+    const { id } = req.params
+    if (!id) return res.status(400).send("O id é obrigatório!")
 
     try {
-        // const product = await db.collection(collections.products).findOne({_id: new ObjectId(id)})
-        // if (!product) return res.status(404).send('Produto não encontrado.')
+        const bunnyIdQuery = await getBunnyDB(id)
 
-        // res.send(product)
+        if (bunnyIdQuery.rows.length === 0) {
+          return res.status(404).send("Este id não existe no banco de coelhos");
+        }
+    
+        const formattedBunnyId = bunnyIdQuery.rows[0];
+        res.send(formattedBunnyId);
+
     } catch (err) {
         console.log('err de getBunny backend:', err)
         return res.status(500).send(err.message);
@@ -61,6 +66,26 @@ const session = res.locals;
         return res.status(500).send(err.message);
     }
 }
+
+export async function getTables(req, res){
+    try {
+  
+    const resultSizes = await db.query(`SELECT * FROM sizes`)
+    const resultSkinColors = await db.query(`SELECT * FROM "skinColors"`)
+    const resultBreeds = await db.query(`SELECT * FROM "skinColors"`)
+    
+    res.status(200).send({
+        resultSizes: resultSizes.rows,
+        resultSkinColors: resultSkinColors.rows,
+        resultBreeds: resultBreeds.rows
+    })
+
+    } catch (err) {
+        console.log('err de postBunny backend:', err)
+        return res.status(500).send(err.message);
+    }
+}
+
 
 export async function updateBunny(req, res){
     // const {id} = req.params;
