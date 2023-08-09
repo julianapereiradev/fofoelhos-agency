@@ -8,7 +8,8 @@ function mapGetMyBunnies(user_me) {
       id: user_me.id,
       name: user_me.name,
       age: user_me.age, 
-      active: user_me.active
+      active: user_me.active,
+      url: user_me.url
     };
   }
 
@@ -110,7 +111,8 @@ export async function getMyBunnies(req, res) {
             id: null,
             name: null,
             age: null, 
-            active: null
+            active: null,
+            url: null
         });
       }
   
