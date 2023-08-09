@@ -72,7 +72,7 @@ export async function getTables(req, res){
   
     const resultSizes = await db.query(`SELECT * FROM sizes`)
     const resultSkinColors = await db.query(`SELECT * FROM "skinColors"`)
-    const resultBreeds = await db.query(`SELECT * FROM "skinColors"`)
+    const resultBreeds = await db.query(`SELECT * FROM "breeds"`)
     
     res.status(200).send({
         resultSizes: resultSizes.rows,
