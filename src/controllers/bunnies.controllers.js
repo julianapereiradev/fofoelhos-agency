@@ -1,5 +1,5 @@
 import { db } from "../database/database.connection.js";
-import { getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
+import { getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB, selectBunnyByIdDB } from "../repositories/bunnies.repositories.js";
 
 //To render ROUTE /myBunnies
 function mapGetMyBunnies(user_me) {
@@ -93,7 +93,7 @@ export async function getTables(req, res){
     })
 
     } catch (err) {
-        console.log('err de postBunny backend:', err)
+        console.log('err de getTables backend:', err)
         return res.status(500).send(err.message);
     }
 }
@@ -120,37 +120,56 @@ export async function getMyBunnies(req, res) {
         resultMyBunnies: result.rows.map(mapGetMyBunnies)
       });
     } catch (err) {
+        console.log('err de getMyBunnies backend:', err)
       return res.status(500).send(err.message);
     }
   }
 
 
 export async function updateBunny(req, res){
-    // const {id} = req.params;
-    // const { name, phone, cpf, birthday } = req.body;
+    const {id} = req.params;
+    const { name, description, age, breedId, skinColorId, sizeId, active, url } = req.body;
+    const session = res.locals;
   
     try {
-  
-    //   const idExistQuery = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
+        const idBunnyQuery = await selectBunnyByIdDB(id)
+        if (idBunnyQuery.rows.length === 0) {
+          return res.status(404).send("Este (id) não existe no banco de ids");
+        }
         
-    //   if (idExistQuery.rows.length === 0) {
-    //     return res.status(404).send("Este id não existe no banco de clientes");
-    //   }
+        const userIdFromToken = session.rows[0].userId;
+        const userIdFromBunnies = idBunnyQuery.rows[0].userId;
+        
+        if (userIdFromToken !== userIdFromBunnies) {
+          return res.status(401).send("Você não tem permissão para atualizar este coelho.");
+        }
+
+      await db.query( `
+      UPDATE bunnies SET name=$1, 
+      description=$2,
+      age=$3,
+      "breedId"=$4, 
+      "skinColorId"=$5, 
+      "sizeId"=$6, 
+      active=$7, 
+      url=$8
+      WHERE id=$9`,
+      [name, description, age, breedId, skinColorId, sizeId, active, url, id]);
   
-    //   // Verificar se o CPF já pertence a outro usuário
-    //   const cpfExistQuery = await db.query(`SELECT * FROM customers WHERE cpf = $1 AND id <> $2;`, [cpf, id]);
-  
-    //   if (cpfExistQuery.rows.length > 0) {
-    //     return res.status(409).send("O CPF que você está tentando atualizar já pertence a outro usuário");
-    //   }
-  
-    //   await db.query( `
-    //   UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5`,
-    //   [name, phone, cpf, birthday, id]);
-  
-    //   res.sendStatus(200);
+    res.status(201).send({
+        name: name,
+        userId: session.rows[0].userId,
+        age: age,
+        description: description,
+        breedId: breedId,
+        skinColorId: skinColorId,
+        sizeId: sizeId,
+        active: active,
+        url: url
+      });
+
     } catch (err) {
-        console.log('err de postBunny backend:', err)
+        console.log('err de updateBunny backend:', err)
         return res.status(500).send(err.message);
     }
   }

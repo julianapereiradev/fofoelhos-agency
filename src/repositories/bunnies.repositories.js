@@ -42,3 +42,6 @@ export async function getMyBunniesDB(userId) {
      `, [userId]);
  }
  
+ export async function selectBunnyByIdDB(id) {
+    return await db.query(`SELECT * FROM bunnies WHERE id=$1`, [id]);
+}
