@@ -7,5 +7,5 @@ const userRouter = Router()
 userRouter.post("/signup", validationSchema(signupSchema), signup);
 userRouter.post("/signin", validationSchema(signinSchema), signin);
 userRouter.delete('/logout', validationAuth, logout)
-
+//rota de logout
 export default userRouter

@@ -1,5 +1,16 @@
 import { db } from "../database/database.connection.js";
-import { getBunniesDB, getBunnyDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
+import { getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB } from "../repositories/bunnies.repositories.js";
+
+//To render ROUTE /myBunnies
+function mapGetMyBunnies(user_me) {
+    return {
+      dono: user_me.dono,
+      id: user_me.id,
+      name: user_me.name,
+      age: user_me.age, 
+      active: user_me.active
+    };
+  }
 
 export async function getBunnies(req,res) {
     try {
@@ -85,6 +96,31 @@ export async function getTables(req, res){
         return res.status(500).send(err.message);
     }
 }
+
+export async function getMyBunnies(req, res) {
+    const user = res.locals.rows[0].userId
+  
+    try {
+      const result = await getMyBunniesDB(user);
+
+      if (result.rows.length === 0) {
+        // Usuário não tem nenhum coelho registrado
+        return res.status(200).send({
+            dono: null,
+            id: null,
+            name: null,
+            age: null, 
+            active: null
+        });
+      }
+  
+      res.status(200).send({
+        resultMyBunnies: result.rows.map(mapGetMyBunnies)
+      });
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  }
 
 
 export async function updateBunny(req, res){

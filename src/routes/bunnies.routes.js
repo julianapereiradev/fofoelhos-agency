@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validationAuth } from "../middlewares/validationAuth.middlewares.js";
 import { validationSchema } from "../middlewares/validationSchema.middlewares.js";
-import { getBunnies, getBunny, getTables, postBunny, updateBunny } from "../controllers/bunnies.controllers.js";
+import { getBunnies, getBunny, getMyBunnies, getTables, postBunny, updateBunny } from "../controllers/bunnies.controllers.js";
 import { bunnySchema } from "../schemas/bunnies.schemas.js";
 
 
@@ -12,5 +12,6 @@ bunnyRouter.get("/bunny/:id", validationAuth, getBunny)
 bunnyRouter.post("/postBunny", validationAuth, validationSchema(bunnySchema), postBunny)
 bunnyRouter.put("/bunny/:id", validationAuth, validationSchema(bunnySchema), updateBunny)
 bunnyRouter.get("/getTables", getTables)
+bunnyRouter.get("/myBunnies", validationAuth, getMyBunnies);
 
 export default bunnyRouter

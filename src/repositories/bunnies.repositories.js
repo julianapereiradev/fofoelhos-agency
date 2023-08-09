@@ -31,3 +31,14 @@ export async function getBunnyDB(id) {
     WHERE bunnies."id" = $1
     `, [id])
 }
+
+export async function getMyBunniesDB(userId) {
+    return await db.query(`
+    SELECT bunnies.*,
+    users."name" AS "dono"
+    FROM bunnies
+    JOIN users ON users."id" = bunnies."userId"
+    WHERE bunnies."userId" = $1
+     `, [userId]);
+ }
+ 
