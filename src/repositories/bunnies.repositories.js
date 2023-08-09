@@ -21,7 +21,8 @@ export async function getBunnyDB(id) {
     "skinColors"."name" AS "skinColor",
     sizes."name" AS "size",
     bunnies."active",
-    bunnies."url"
+    bunnies."url",
+    users."phone"
     FROM bunnies
     JOIN "breeds" ON "breeds"."id" = bunnies."breedId"
     JOIN "sizes" ON "sizes"."id" = bunnies."sizeId"
