@@ -3,9 +3,6 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import { findUserByCpfDB, findUserByEmailDB, signinDB, signupDB } from "../repositories/users.repositories.js";
 
-
-//Functions:
-
 export async function signup(req, res) {
   const { name, email, cpf, phone, password, confirmPassword } = req.body;
 

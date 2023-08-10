@@ -82,9 +82,9 @@ const session = res.locals;
 export async function getTables(req, res){
     try {
   
-    const resultSizes = await db.query(`SELECT * FROM sizes`)
-    const resultSkinColors = await db.query(`SELECT * FROM "skinColors"`)
-    const resultBreeds = await db.query(`SELECT * FROM "breeds"`)
+    const resultSizes = await db.query(`SELECT * FROM sizes ORDER BY id ASC`)
+    const resultSkinColors = await db.query(`SELECT * FROM "skinColors" ORDER BY id ASC`)
+    const resultBreeds = await db.query(`SELECT * FROM "breeds" ORDER BY id ASC`)
     
     res.status(200).send({
         resultSizes: resultSizes.rows,
