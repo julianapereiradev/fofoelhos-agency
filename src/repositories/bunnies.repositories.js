@@ -30,7 +30,7 @@ export async function getBunnyDB(id) {
     JOIN "breeds" ON "breeds"."id" = bunnies."breedId"
     JOIN "sizes" ON "sizes"."id" = bunnies."sizeId"
     JOIN "skinColors" ON "skinColors"."id" = bunnies."skinColorId"
-    JOIN "users" ON "users"."id" = bunnies."breedId"
+    JOIN "users" ON "users"."id" = bunnies."userId"
     WHERE bunnies."id" = $1
     `, [id])
 }
