@@ -19,3 +19,4 @@ export async function signupDB(name, email, cpf, phone, encryptedPassword) {
 export async function signinDB(user, token) {
     return await db.query(`INSERT INTO sessions ("userId", token) VALUES ($1, $2)`, [user, token]);
 }
+

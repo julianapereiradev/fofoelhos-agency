@@ -1,5 +1,5 @@
 import { db } from "../database/database.connection.js";
-import { getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB, selectBunnyByIdDB } from "../repositories/bunnies.repositories.js";
+import {getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB, selectBunnyByIdDB } from "../repositories/bunnies.repositories.js";
 
 //To render ROUTE /myBunnies
 function mapGetMyBunnies(user_me) {
@@ -107,7 +107,6 @@ export async function getMyBunnies(req, res) {
       if (result.rows.length === 0) {
         // Usuário não tem nenhum coelho registrado
         return res.status(200).send({
-            dono: null,
             id: null,
             name: null,
             age: null, 
@@ -116,9 +115,7 @@ export async function getMyBunnies(req, res) {
         });
       }
   
-      res.status(200).send({
-        resultMyBunnies: result.rows.map(mapGetMyBunnies)
-      });
+      res.status(200).send(result.rows.map(mapGetMyBunnies));
     } catch (err) {
         console.log('err de getMyBunnies backend:', err)
       return res.status(500).send(err.message);
@@ -173,3 +170,15 @@ export async function updateBunny(req, res){
         return res.status(500).send(err.message);
     }
   }
+
+//   export async function getBunniesBySize(req, res) {
+//     const { sizeId } = req.params;
+
+//     try {
+//         const data = await getBunniesBySizeDB(true, sizeId);
+//         return res.send(data.rows);
+//     } catch (err) {
+//         console.log('err de getBunniesBySize backend:', err);
+//         return res.status(500).send(err.message);
+//     }
+// }

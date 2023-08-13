@@ -13,5 +13,6 @@ bunnyRouter.post("/postBunny", validationAuth, validationSchema(bunnySchema), po
 bunnyRouter.put("/bunny/:id", validationAuth, validationSchema(bunnySchema), updateBunny)
 bunnyRouter.get("/getTables", getTables)
 bunnyRouter.get("/myBunnies", validationAuth, getMyBunnies);
+// bunnyRouter.get("/bunnies/size/:sizeId", validationAuth, getBunniesBySize);
 
 export default bunnyRouter

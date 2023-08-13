@@ -48,3 +48,12 @@ export async function getMyBunniesDB(userId) {
  export async function selectBunnyByIdDB(id) {
     return await db.query(`SELECT * FROM bunnies WHERE id=$1`, [id]);
 }
+
+// export async function getBunniesBySizeDB(active, sizeId) {
+//     return await db.query(`
+//         SELECT bunnies.*, sizes.name AS size
+//         FROM bunnies
+//         JOIN sizes ON sizes.id = bunnies."sizeId"
+//         WHERE bunnies.active = $1 AND sizes.id = $2
+//     `, [active, sizeId]);
+// }
