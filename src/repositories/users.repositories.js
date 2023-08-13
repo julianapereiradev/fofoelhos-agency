@@ -20,3 +20,6 @@ export async function signinDB(user, token) {
     return await db.query(`INSERT INTO sessions ("userId", token) VALUES ($1, $2)`, [user, token]);
 }
 
+export async function selectUserByIdDB(id) {
+  return await db.query(`SELECT users.id, users.name, users.email, users.cpf, users.phone, users."createdAt" FROM users WHERE id=$1`, [id]);
+}

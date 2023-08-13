@@ -13,3 +13,11 @@ export const signupSchema = joi.object({
     email: joi.string().email().trim().required(),
     password: joi.string().required()
   });
+
+  export const updateUserSchema = joi.object({
+    name: joi.string().trim().required(),
+    email: joi.string().email().trim().required(),
+    cpf: joi.string().length(11).pattern(/^[0-9]+$/).required(),
+    phone: joi.string().min(10).max(11).pattern(/^[0-9]+$/).required(),
+  });
+  
