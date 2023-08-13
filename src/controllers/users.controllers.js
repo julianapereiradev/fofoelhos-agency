@@ -49,7 +49,7 @@ export async function signin(req, res) {
 
       await signinDB(user.rows[0].id, token)
 
-      res.status(200).send({ token: token });
+      res.status(200).send({ token: token, userId: user.rows[0].id});
     } else {
       res.status(401).send({ message: "Senha incorreta!" });
     }
@@ -72,6 +72,34 @@ export async function logout(req, res) {
     return res.status(500).send(err.message);
   }
 }
+
+
+export async function getUser(req, res){
+  const {id} = req.params;
+  const session = res.locals;
+
+  try {
+      const idUserQuery = await selectUserByIdDB(id)
+      if (idUserQuery.rows.length === 0) {
+        return res.status(404).send("Este (id) não existe no banco de usuáriossss");
+      }
+      
+      const userIdFromToken = session.rows[0].userId;
+      const userIdFromUsers = idUserQuery.rows[0].id;
+      
+      if (userIdFromToken !== userIdFromUsers) {
+        return res.status(401).send("Você não tem permissão para acessar este dado.");
+      }
+
+      res.status(201).send(idUserQuery.rows[0]);
+
+  } catch (err) {
+      console.log('err de updateUser backend:', err)
+      return res.status(500).send(err.message);
+  }
+}
+
+
 
 export async function updateUser(req, res){
   const {id} = req.params;
