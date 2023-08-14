@@ -1,7 +1,7 @@
 import { db } from "../database/database.connection.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { findUserByCpfDB, findUserByEmailDB, selectUserByIdDB, signinDB, signupDB } from "../repositories/users.repositories.js";
+import { findUserByCpfDB, findUserByEmailDB, logoutDB, selectFromCpfDB, selectFromEmailDB, selectUserByIdDB, signinDB, signupDB, updateUserDB } from "../repositories/users.repositories.js";
 
 export async function signup(req, res) {
   const { name, email, cpf, phone, password, confirmPassword } = req.body;
@@ -59,12 +59,13 @@ export async function signin(req, res) {
   }
 }
 
-//colocar no repositories depois 
+
 export async function logout(req, res) {
   const token = res.locals.rows[0].token;
 
   try {
-    await db.query(`DELETE FROM sessions WHERE token =$1`, [token]);
+    
+    await logoutDB(token)
     res.status(204).send("Token removido!")
 
   } catch (err) {
@@ -119,21 +120,14 @@ export async function updateUser(req, res){
         return res.status(401).send("Você não tem permissão para atualizar este dado.");
       }
 
-      const responsecpf = await db.query(`SELECT * FROM users WHERE cpf= $1 AND id <> $2`, [cpf, id])
+      const responsecpf = await selectFromCpfDB(cpf, id)
       if(responsecpf.rowCount > 0) return res.status(409).send("Esse CPF já pertence a outro usuário")
 
-      const responseemail = await db.query(`SELECT * FROM users WHERE email= $1 AND id <> $2`, [email, id])
+      const responseemail = await selectFromEmailDB(email, id)
       if(responseemail.rowCount > 0) return res.status(409).send("Esse email já pertence a outro usuário")
 
 
-      await db.query(`
-      UPDATE users SET name=$1, 
-      email=$2, 
-      cpf=$3, 
-      phone=$4, 
-      "createdAt" = NOW()
-      WHERE id=$5`, 
-      [name, email, cpf, phone, id])
+      await updateUserDB(name, email, cpf, phone, id)
 
       res.status(201).send('Usuário Atualizado');
 

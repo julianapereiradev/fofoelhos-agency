@@ -1,5 +1,5 @@
 import { db } from "../database/database.connection.js";
-import {getBunniesDB, getBunnyDB, getMyBunniesDB, postBunnyDB, selectBunnyByIdDB } from "../repositories/bunnies.repositories.js";
+import {getBunniesDB, getBunnyDB, getMyBunniesDB, getTablesBreedsDB, getTablesSizesDB, getTablesSkinColorsDB, postBunnyDB, selectBunnyByIdDB, updateBunnyDB } from "../repositories/bunnies.repositories.js";
 
 //To render ROUTE /myBunnies
 function mapGetMyBunnies(user_me) {
@@ -81,10 +81,9 @@ const session = res.locals;
 
 export async function getTables(req, res){
     try {
-  
-    const resultSizes = await db.query(`SELECT * FROM sizes ORDER BY id ASC`)
-    const resultSkinColors = await db.query(`SELECT * FROM "skinColors" ORDER BY id ASC`)
-    const resultBreeds = await db.query(`SELECT * FROM "breeds" ORDER BY id ASC`)
+    const resultSizes = await getTablesSizesDB()
+    const resultSkinColors = await getTablesSkinColorsDB()
+    const resultBreeds = await getTablesBreedsDB()
     
     res.status(200).send({
         resultSizes: resultSizes.rows,
@@ -141,17 +140,7 @@ export async function updateBunny(req, res){
           return res.status(401).send("Você não tem permissão para atualizar este coelho.");
         }
 
-      await db.query( `
-      UPDATE bunnies SET name=$1, 
-      description=$2,
-      age=$3,
-      "breedId"=$4, 
-      "skinColorId"=$5, 
-      "sizeId"=$6, 
-      active=$7, 
-      url=$8
-      WHERE id=$9`,
-      [name, description, age, breedId, skinColorId, sizeId, active, url, id]);
+      await updateBunnyDB(name, description, age, breedId, skinColorId, sizeId, active, url, id)
   
     res.status(201).send({
         name: name,

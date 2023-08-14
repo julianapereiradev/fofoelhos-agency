@@ -49,6 +49,36 @@ export async function getMyBunniesDB(userId) {
     return await db.query(`SELECT * FROM bunnies WHERE id=$1`, [id]);
 }
 
+
+export async function getTablesSizesDB(){
+    return await db.query(`SELECT * FROM sizes ORDER BY id ASC`)
+}
+
+export async function getTablesSkinColorsDB(){
+    return await db.query(`SELECT * FROM "skinColors" ORDER BY id ASC`)
+}
+
+export async function getTablesBreedsDB(){
+    return await db.query(`SELECT * FROM "breeds" ORDER BY id ASC`)
+}
+
+export async function updateBunnyDB(name, description, age, breedId, skinColorId, sizeId, active, url, id) {
+  return await db.query( `
+      UPDATE bunnies SET name=$1, 
+      description=$2,
+      age=$3,
+      "breedId"=$4, 
+      "skinColorId"=$5, 
+      "sizeId"=$6, 
+      active=$7, 
+      url=$8
+      WHERE id=$9`,
+      [name, description, age, breedId, skinColorId, sizeId, active, url, id]);
+  }
+
+
+
+
 // export async function getBunniesBySizeDB(active, sizeId) {
 //     return await db.query(`
 //         SELECT bunnies.*, sizes.name AS size
